@@ -1,4 +1,5 @@
 import path from 'path';
+import { config } from './config/config';
 import { requestLogger } from './middlewares';
 
 // tslint:disable-next-line: no-duplicate-imports
@@ -21,7 +22,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Global Middleware
 // Development Logging
-if (process.env.NODE_ENV === 'development') {
+if (config.env.NODE_ENV === 'development') {
   app.use(requestLogger);
 }
 
