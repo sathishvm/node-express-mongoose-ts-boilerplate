@@ -4,7 +4,7 @@
   "description": "A boilerplate for building production-ready RESTful APIs using Node.js, Express, and Mongoose with Typescript",
   "main": "src/server.ts",
   "scripts": {
-    "start": "nodemon src/server.ts",
+    "start": "nodemon --exec ts-node src/server.ts",
     "start:prod": "NODE_ENV=production nodemon build/server.js",
     "build": "tsc -p ./tsconfig.json",
     "tsc:w": "tsc -w"
