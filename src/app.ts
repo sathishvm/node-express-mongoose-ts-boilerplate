@@ -10,6 +10,8 @@ import xss from 'xss-clean';
 import hpp from 'hpp';
 import bodyParser from 'body-parser';
 
+import pug from 'pug';
+
 import express, { Application, Response, Request } from 'express';
 
 const app: Application = express();
