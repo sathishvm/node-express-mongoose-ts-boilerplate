@@ -1,0 +1,1 @@
+export { errorController } from './errorController';
