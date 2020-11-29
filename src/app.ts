@@ -1,8 +1,6 @@
 import path from 'path';
 import { config } from './config/config';
 import { requestLogger } from './middlewares';
-
-// tslint:disable-next-line: no-duplicate-imports
 import { limiter as apiLimiter } from './middlewares';
 
 import helmet from 'helmet';
