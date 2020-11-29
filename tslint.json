@@ -8,6 +8,7 @@
     "ordered-imports": false,
     "interface-name": false,
     "no-console": false,
+    "no-duplicate-imports": false,
     "only-arrow-functions": false,
     "object-literal-shorthand": false,
     "no-return-await": false
