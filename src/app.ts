@@ -11,6 +11,7 @@ import bodyParser from 'body-parser';
 import { AppError } from './utils';
 import pug from 'pug';
 import { errorController as globalErrorController } from './controllers';
+import { router } from './routes/routes';
 
 import express, { Application, Response, Request, NextFunction } from 'express';
 
@@ -52,7 +53,7 @@ app.use(
 );
 
 // Routes
-// app.use('/api/v1');
+app.use('/api/v1', router);
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('TS App is Running');
