@@ -10,10 +10,11 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
 import bodyParser from 'body-parser';
-
+import { AppError } from './utils';
 import pug from 'pug';
+import { errorController as globalErrorController } from './controllers';
 
-import express, { Application, Response, Request } from 'express';
+import express, { Application, Response, Request, NextFunction } from 'express';
 
 const app: Application = express();
 
@@ -21,13 +22,13 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // Global Middleware
-// Development Logging
-if (config.env.NODE_ENV === 'development') {
-  app.use(requestLogger);
-}
 
 // HTTP Security Header Middleware
 app.use(helmet());
+
+if (config.env === 'development') {
+  app.use(requestLogger);
+}
 
 // API request limiter
 app.use('/api/', apiLimiter);
@@ -48,26 +49,23 @@ app.use(xss());
 // Preventing http parameter pollution
 app.use(
   hpp({
-    whitelist: [], // FIXME : Create whitelist those need to be done!!!
+    whitelist: [], // FIXME: Create whitelist those need to be done!!!
   })
 );
 
 // Routes
 // app.use('/api/v1');
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('TS App is Running');
 });
 
 // If no other routes is found this middleware will trigger.
-
-// TODO : AppError utility
-// app.all('*', (req, res, next) => {
-//   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-// });
+app.all('*', (req: Request, res: Response, next: NextFunction) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
 
 // Global error controller => ( will control errors coming from all of the files. )
-// TODO : Want to setup global error controller
-// app.use(globalErrorController);
+app.use(globalErrorController);
 
 export { app };
