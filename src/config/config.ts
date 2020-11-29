@@ -34,7 +34,7 @@ const { value: envVars, error } = envVarsSchema
 
 if (error) throw new Error(`Config validation error: ${error.message}`);
 
-export const config: object = {
+export const config: object | any = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   mongodb: {
