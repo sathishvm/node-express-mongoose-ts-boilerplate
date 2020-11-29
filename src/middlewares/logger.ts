@@ -2,7 +2,7 @@ import morgan from 'morgan';
 import chalk from 'chalk';
 import { IncomingMessage, ServerResponse } from 'http';
 
-export default morgan(
+export const logger = morgan(
   (tokens: any, req: IncomingMessage, res: ServerResponse) => {
     let status = tokens.status(req, res);
     let method = tokens.method(req, res);
