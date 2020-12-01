@@ -146,7 +146,7 @@ const protect = catchAsync(
   }
 );
 
-const restrictTo = (...roles: any[]) => {
+const restrictTo = (...roles: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     // Check if the user has its role to perform task && if not send error
     if (!roles.includes(req.user.role)) {
