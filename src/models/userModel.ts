@@ -86,7 +86,6 @@ userSchema.pre<IUser>('save', async function (next) {
 
 userSchema.statics.isEmailTaken = async function (email: any) {
   const user = await this.findOne({ email });
-  console.log(user);
   return !!user;
 };
 
