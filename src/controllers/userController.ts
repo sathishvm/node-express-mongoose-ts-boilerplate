@@ -1,15 +1,7 @@
 import { User } from '../models';
-import { AppError, catchAsync } from '../utils';
+import { AppError, catchAsync, queryFilter } from '../utils';
 import HTTP_STATUS from 'http-status';
 import { Request, Response, NextFunction } from 'express';
-
-const filterObj = (obj: any, ...allowedFields: any[]) => {
-  const newObj = {};
-  Object.keys(obj).forEach((el) => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
-  return newObj;
-};
 
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -120,7 +112,7 @@ const updateMe = catchAsync(
     }
 
     // 2. Filter the unwanted data from the req.body
-    const filteredBody = filterObj(req.body, 'name', 'email');
+    const filteredBody = queryFilter(req.body, 'name', 'email');
 
     // 3. Find the user and update details with the filtered data
     const updatedUser = await User.findByIdAndUpdate(
