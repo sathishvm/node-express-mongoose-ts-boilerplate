@@ -5,6 +5,7 @@ import { AppError } from '../utils';
 import { catchAsync } from '../utils';
 import { config } from '../config/config';
 import HTTP_STATUS from 'http-status';
+import { Email } from '../utils';
 
 import { Request, Response, NextFunction } from 'express';
 
@@ -39,6 +40,7 @@ const sendCreatedToken = (user: any, statusCode: number, res: Response) => {
 
 const signup = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    // Check if the email is already exists
     if (await User.isEmailTaken(req.body.email)) {
       return next(new AppError('Email already taken', HTTP_STATUS.BAD_REQUEST));
     }
@@ -49,7 +51,9 @@ const signup = catchAsync(
       passwordConfirm: req.body.passwordConfirm,
     });
 
-    //   TODO: Send the welcome e-mail to the user
+    // Send the welcome e-mail to the user
+    const url = `${req.protocol}://${req.get('host')}/me`;
+    await new Email(newUser, url).sendWelcome();
 
     sendCreatedToken(newUser, HTTP_STATUS.CREATED, res);
   }
@@ -187,33 +191,33 @@ const forgotPassword = catchAsync(
       'host'
     )}/api/v1/users/resetPassword/${resetToken}`;
 
-    const message = `Forgot your password? Please the below link to create a new password:\n ${resetURL}\nIf you didn't forget your password, please ignore this email!`;
+    try {
+      // await sendEmail({
+      //   email: user.email,
+      //   subject: 'Company Name password reset token (valid for 10 min)',
+      //   message,
+      // });
 
-    //   TODO: Need to send email with reset token to the users
-    //   try {
-    //     await sendEmail({
-    //       email: user.email,
-    //       subject: 'Company Name password reset token (valid for 10 min)',
-    //       message,
-    //     });
-    //
-    //  TODO: remove token from response
+      //  TODO: remove token from response
 
-    res.status(HTTP_STATUS.OK).json({
-      status: 'success',
-      message: 'Token sent to email!',
-      resetToken,
-    });
-    //   } catch (err) {
-    //     user.passwordResetToken = undefined;
-    //     user.passwordResetExpires = undefined;
-    //     await user.save({ validateBeforeSave: false });
+      await new Email(user, resetURL).sendPasswordReset();
 
-    //     return next(
-    //       new AppError('There was an error sending the email. Try again later!'),
-    //       500
-    //     );
-    //   }
+      res.status(HTTP_STATUS.OK).json({
+        status: 'success',
+        message: 'Token sent to email!',
+      });
+    } catch (err) {
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save({ validateBeforeSave: false });
+
+      return next(
+        new AppError(
+          'There was an error sending the email. Try again later!',
+          HTTP_STATUS.INTERNAL_SERVER_ERROR
+        )
+      );
+    }
   }
 );
 
