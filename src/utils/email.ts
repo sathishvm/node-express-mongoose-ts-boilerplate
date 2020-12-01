@@ -17,7 +17,7 @@ export class Email {
   }
 
   newTransport() {
-    if (process.env.NODE_ENV === 'production') {
+    if (config.env === 'production') {
       // Sendgrid
       return nodemailer.createTransport({
         service: 'SendGrid',
