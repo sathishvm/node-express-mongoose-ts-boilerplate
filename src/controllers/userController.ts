@@ -37,6 +37,10 @@ const getUser = catchAsync(
 
 const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    if (await User.isEmailTaken(req.body.email)) {
+      return next(new AppError('Email already taken', HTTP_STATUS.BAD_REQUEST));
+    }
+
     const user = await User.create({
       name: req.body.name,
       email: req.body.email,
@@ -55,6 +59,10 @@ const createUser = catchAsync(
 
 const updateUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    if (await User.isEmailTaken(req.body.email)) {
+      return next(new AppError('Email already taken', HTTP_STATUS.BAD_REQUEST));
+    }
+
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -111,6 +119,10 @@ const updateMe = catchAsync(
       );
     }
 
+    if (await User.isEmailTaken(req.body.email)) {
+      return next(new AppError('Email already taken', HTTP_STATUS.BAD_REQUEST));
+    }
+
     // 2. Filter the unwanted data from the req.body
     const filteredBody = queryFilter(req.body, 'name', 'email');
 
@@ -125,7 +137,7 @@ const updateMe = catchAsync(
     );
 
     // 4. Send response
-    res.status(200).json({
+    res.status(HTTP_STATUS.OK).json({
       status: 'success',
       data: {
         user: updatedUser,
@@ -140,7 +152,7 @@ const deleteMe = catchAsync(
     const deletedUser = await User.findByIdAndDelete(req.user.id);
 
     // 4. Send response
-    res.status(204).json({
+    res.status(HTTP_STATUS.NO_CONTENT).json({
       status: 'success',
       data: null,
     });
