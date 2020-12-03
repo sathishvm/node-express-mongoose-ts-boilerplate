@@ -192,14 +192,6 @@ const forgotPassword = catchAsync(
     )}/api/v1/users/resetPassword/${resetToken}`;
 
     try {
-      // await sendEmail({
-      //   email: user.email,
-      //   subject: 'Company Name password reset token (valid for 10 min)',
-      //   message,
-      // });
-
-      //  TODO: remove token from response
-
       await new Email(user, resetURL).sendPasswordReset();
 
       res.status(HTTP_STATUS.OK).json({
