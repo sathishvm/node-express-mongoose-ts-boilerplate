@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --exec ts-node src/server.ts",
     "start:prod": "NODE_ENV=production nodemon build/server.js",
-    "build": "tsc -p ./tsconfig.json",
+    "build": "tsc -p ./tsconfig.json && cp -r ./src/views ./build",
     "tsc:w": "tsc -w"
   },
   "repository": {
