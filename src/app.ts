@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
+import compression from 'compression'
 import bodyParser from 'body-parser';
 import { AppError } from './utils';
 import pug from 'pug';
@@ -28,6 +29,9 @@ app.use(helmet());
 if (config.env === 'development') {
   app.use(requestLogger);
 }
+
+// gzip compression
+app.use(compression())
 
 // API request limiter
 app.use('/api/', apiLimiter);
