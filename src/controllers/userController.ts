@@ -1,15 +1,23 @@
 import { User } from '../models';
-import { AppError, catchAsync, queryFilter } from '../utils';
+import { AppError, catchAsync, queryFilter, APIFeatures } from '../utils';
 import HTTP_STATUS from 'http-status';
 import { Request, Response, NextFunction } from 'express';
 
 const getAllUsers = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const users = await User.find();
+    const features = await new APIFeatures(User.find(), req.query)
+    .filter()
+    .sort()
+    .selectFields()
+    .paginate(User);
+
+  const users = await features.query;
+  const pagination = features.pagination;
 
     res.status(HTTP_STATUS.OK).json({
       status: 'success',
       results: users.length,
+      pagination,
       data: {
         users,
       },
