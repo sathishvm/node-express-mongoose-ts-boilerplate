@@ -18,7 +18,7 @@ mongoose
     console.log('Error: DB not Connected :', error.name);
   });
 
-const port = config.port;
+const port = process.env.PORT || config.port;
 
 const server = app.listen(port, () => {
   console.log(`App started running on port ${port}...`);
