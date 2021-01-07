@@ -2,7 +2,7 @@
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-A boilerplate/starter template for quickly building production-ready RESTful APIs using Node.js, Express, and Mongoose with TypeScript.
+A boilerplate/starter template for quickly building RESTful APIs using Node.js, Express, and Mongoose with TypeScript.
 
 It comes with many built-in features, such as authentication using JWT, pagination, etc. For more details about the features, check the list below.
 
