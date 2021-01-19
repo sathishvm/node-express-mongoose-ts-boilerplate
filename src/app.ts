@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import hpp from 'hpp';
+import cors from 'cors';
 import compression from 'compression'
 import bodyParser from 'body-parser';
 import { AppError } from './utils';
@@ -29,6 +30,10 @@ app.use(helmet());
 if (config.env === 'development') {
   app.use(requestLogger);
 }
+
+// Enabling cors options
+app.use(cors())
+app.options('*',cors())
 
 // gzip compression
 app.use(compression())
